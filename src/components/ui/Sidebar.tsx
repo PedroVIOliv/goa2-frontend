@@ -24,6 +24,8 @@ export function Sidebar({ view, myHeroId, onCommit, onPass }: Props) {
     }
   }
 
+  const canCommit = myHero?.current_turn_card === null;
+
   return (
     <div className={styles.sidebar}>
       {myHero && (
@@ -32,6 +34,7 @@ export function Sidebar({ view, myHeroId, onCommit, onPass }: Props) {
           <CardList
             cards={myHero.hand}
             phase={view.phase}
+            canCommit={canCommit}
             onCommit={onCommit}
             onPass={onPass}
           />

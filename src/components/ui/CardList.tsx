@@ -6,13 +6,15 @@ import styles from "./CardList.module.css";
 interface Props {
   cards: CardView[];
   phase: string;
+  canCommit: boolean;
   onCommit: (cardId: string) => void;
   onPass: () => void;
 }
 
-export function CardList({ cards, phase, onCommit, onPass }: Props) {
+export function CardList({ cards, phase, canCommit, onCommit, onPass }: Props) {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const isPlanning = phase === "PLANNING";
+  const canAct = isPlanning && canCommit;
 
   return (
     <div>
@@ -23,7 +25,7 @@ export function CardList({ cards, phase, onCommit, onPass }: Props) {
             key={card.id}
             card={card}
             isSelected={selectedId === card.id}
-            onClick={isPlanning ? () => setSelectedId(card.id) : undefined}
+            onClick={canAct ? () => setSelectedId(card.id) : undefined}
           />
         ))}
         {cards.length === 0 && (
@@ -36,12 +38,16 @@ export function CardList({ cards, phase, onCommit, onPass }: Props) {
         <div className={styles.actions}>
           <button
             className={`${styles.btn} ${styles.confirm}`}
-            disabled={!selectedId}
+            disabled={!canCommit || !selectedId}
             onClick={() => selectedId && onCommit(selectedId)}
           >
             Commit
           </button>
-          <button className={`${styles.btn} ${styles.pass}`} onClick={onPass}>
+          <button
+            className={`${styles.btn} ${styles.pass}`}
+            disabled={!canCommit}
+            onClick={onPass}
+          >
             Pass
           </button>
         </div>
