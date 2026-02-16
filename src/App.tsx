@@ -1,10 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { CreateGame } from "./components/pages/CreateGame";
 import { GameView } from "./components/pages/GameView";
 import "./theme.css";
-
-function CreateGame() {
-  return <div>Create Game (TODO)</div>;
-}
 
 export default function App() {
   return (
