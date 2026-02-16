@@ -53,7 +53,6 @@ export function HexTile({
       )}
       {occupantId && (
         <UnitToken
-          entityId={occupantId}
           team={team}
           hero={hero}
           minion={minion}

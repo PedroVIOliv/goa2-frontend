@@ -2,14 +2,13 @@ import { TEAM_COLORS } from "../../utils/colors";
 import type { HeroView, MinionView } from "../../types/game";
 
 interface Props {
-  entityId: string;
   team: string;
   hero?: HeroView;
   minion?: MinionView;
   isCurrentActor?: boolean;
 }
 
-export function UnitToken({ entityId, team, hero, minion, isCurrentActor }: Props) {
+export function UnitToken({ team, hero, minion, isCurrentActor }: Props) {
   const color = TEAM_COLORS[team] || "#888";
   let label = "?";
 

@@ -1,12 +1,9 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { GameView } from "./components/pages/GameView";
 import "./theme.css";
 
 function CreateGame() {
   return <div>Create Game (TODO)</div>;
-}
-
-function GameView() {
-  return <div>Game View (TODO)</div>;
 }
 
 export default function App() {
