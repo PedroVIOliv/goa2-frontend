@@ -1,0 +1,49 @@
+.overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 20;
+}
+
+.picker {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 20px;
+  min-width: 300px;
+  max-width: 450px;
+}
+
+.title {
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 12px;
+}
+
+.option {
+  display: block;
+  width: 100%;
+  padding: 10px 16px;
+  margin-bottom: 6px;
+  background: var(--bg-panel);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  text-align: left;
+}
+
+.option:hover {
+  background: #1a5276;
+}
+
+.skip {
+  margin-top: 8px;
+  color: var(--text-secondary);
+  background: transparent;
+  border-color: var(--text-secondary);
+}

@@ -1,0 +1,10 @@
+.sidebar {
+  width: 280px;
+  background: var(--bg-secondary);
+  border-left: 1px solid var(--border);
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  overflow-y: auto;
+}

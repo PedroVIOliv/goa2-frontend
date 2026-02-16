@@ -1,0 +1,29 @@
+.bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 16px;
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border);
+  font-size: 14px;
+}
+
+.phase {
+  padding: 4px 12px;
+  border-radius: 4px;
+  font-weight: bold;
+  color: #fff;
+}
+
+.info {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+.lives {
+  font-weight: bold;
+}
+
+.red { color: var(--team-red); }
+.blue { color: var(--team-blue); }

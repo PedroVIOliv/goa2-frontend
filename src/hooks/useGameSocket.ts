@@ -1,0 +1,130 @@
+import { useEffect, useRef, useCallback, useState } from "react";
+import { GameSocket } from "../api/socket";
+import type {
+  ServerMessage,
+  GameView,
+  InputRequest,
+  GameEvent,
+  Hex,
+} from "../types/game";
+
+interface GameState {
+  view: GameView | null;
+  inputRequest: InputRequest | null;
+  lastEvents: GameEvent[];
+  error: string | null;
+  connected: boolean;
+  myHeroId: string | null;
+}
+
+export function useGameSocket(gameId: string, token: string) {
+  const [state, setState] = useState<GameState>({
+    view: null,
+    inputRequest: null,
+    lastEvents: [],
+    error: null,
+    connected: false,
+    myHeroId: null,
+  });
+
+  const socketRef = useRef<GameSocket | null>(null);
+  const errorTimerRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    if (!gameId || !token) return;
+
+    const wsUrl = `ws://localhost:8000/games/${gameId}/ws?token=${token}`;
+
+    const handleMessage = (data: unknown) => {
+      const msg = data as ServerMessage;
+
+      switch (msg.type) {
+        case "STATE_UPDATE":
+          setState((prev) => ({
+            ...prev,
+            view: msg.view,
+            inputRequest: msg.input_request ?? null,
+            myHeroId: prev.myHeroId ?? detectHeroId(msg.view),
+          }));
+          break;
+
+        case "ACTION_RESULT":
+          setState((prev) => ({
+            ...prev,
+            lastEvents: msg.events,
+            inputRequest: msg.input_request ?? null,
+          }));
+          break;
+
+        case "ERROR":
+          setState((prev) => ({ ...prev, error: msg.detail }));
+          if (errorTimerRef.current) clearTimeout(errorTimerRef.current);
+          errorTimerRef.current = window.setTimeout(() => {
+            setState((prev) => ({ ...prev, error: null }));
+          }, 5000);
+          break;
+      }
+    };
+
+    const handleStatusChange = (connected: boolean) => {
+      setState((prev) => ({ ...prev, connected }));
+    };
+
+    const socket = new GameSocket(wsUrl, handleMessage, handleStatusChange);
+    socketRef.current = socket;
+    socket.connect();
+
+    return () => {
+      socket.disconnect();
+      if (errorTimerRef.current) clearTimeout(errorTimerRef.current);
+    };
+  }, [gameId, token]);
+
+  const send = useCallback((message: Record<string, unknown>) => {
+    socketRef.current?.send(message);
+  }, []);
+
+  const commitCard = useCallback(
+    (cardId: string) => send({ type: "COMMIT_CARD", card_id: cardId }),
+    [send]
+  );
+
+  const passTurn = useCallback(
+    () => send({ type: "PASS_TURN" }),
+    [send]
+  );
+
+  const submitInput = useCallback(
+    (selection: string | Hex | number | null) =>
+      send({ type: "SUBMIT_INPUT", selection }),
+    [send]
+  );
+
+  const requestView = useCallback(
+    () => send({ type: "GET_VIEW" }),
+    [send]
+  );
+
+  return {
+    ...state,
+    commitCard,
+    passTurn,
+    submitInput,
+    requestView,
+  };
+}
+
+/**
+ * Detect which hero belongs to this token by checking which hero's
+ * deck is an array (own hero sees full deck, others see {count}).
+ */
+function detectHeroId(view: GameView): string | null {
+  for (const team of Object.values(view.teams)) {
+    for (const hero of team.heroes) {
+      if (Array.isArray(hero.deck)) {
+        return hero.id;
+      }
+    }
+  }
+  return null;
+}

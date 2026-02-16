@@ -1,0 +1,15 @@
+.container {
+  padding: 8px 0;
+  border-top: 1px solid var(--border);
+}
+
+.name {
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.details {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-top: 2px;
+}

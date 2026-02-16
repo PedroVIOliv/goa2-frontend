@@ -1,0 +1,30 @@
+.banner {
+  position: absolute;
+  top: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.85);
+  color: #fff;
+  padding: 8px 24px;
+  border-radius: 8px;
+  font-size: 14px;
+  z-index: 10;
+  border: 1px solid var(--phase-resolution);
+  max-width: 500px;
+  text-align: center;
+}
+
+.skipBtn {
+  margin-left: 12px;
+  padding: 4px 12px;
+  background: var(--bg-panel);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.skipBtn:hover {
+  background: #555;
+}
