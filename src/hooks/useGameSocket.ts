@@ -37,9 +37,13 @@ export function useGameSocket(gameId: string, token: string) {
 
     const handleMessage = (data: unknown) => {
       const msg = data as ServerMessage;
+      console.log("useGameSocket handling message:", msg.type);
 
       switch (msg.type) {
         case "STATE_UPDATE":
+          console.log("STATE_UPDATE received");
+          console.log("  new input_request:", msg.input_request);
+          console.log("  new view phase:", msg.view.phase);
           setState((prev) => ({
             ...prev,
             view: msg.view,
@@ -49,6 +53,7 @@ export function useGameSocket(gameId: string, token: string) {
           break;
 
         case "ACTION_RESULT":
+          console.log("ACTION_RESULT received, updating input request");
           setState((prev) => ({
             ...prev,
             lastEvents: msg.events,
@@ -57,6 +62,7 @@ export function useGameSocket(gameId: string, token: string) {
           break;
 
         case "ERROR":
+          console.log("ERROR received:", msg.detail);
           setState((prev) => ({ ...prev, error: msg.detail }));
           if (errorTimerRef.current) clearTimeout(errorTimerRef.current);
           errorTimerRef.current = window.setTimeout(() => {

@@ -2,6 +2,8 @@
 
 > **For Claude:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task.
 
+> **Resume Point (2026-02-16):** Tasks 1-9 are DONE and committed. Resume at **Task 10** (GameView page). Then Task 11 (CreateGame page), then Task 12 (integration test). After Task 11, update `src/App.tsx` to import the real `CreateGame` and `GameView` components.
+
 **Goal:** Build a React + TypeScript frontend for Guards of Atlantis II with an SVG hex grid, WebSocket-driven state, and separated player views.
 
 **Architecture:** Single-page app with two routes — a game creation form and the main game view. All game state flows through a single WebSocket connection. The SVG hex grid renders ~200 tiles with inline interaction (click valid hexes/units directly). A right sidebar shows cards and hero info.

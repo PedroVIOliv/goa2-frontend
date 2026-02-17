@@ -32,6 +32,7 @@ export class GameSocket {
     this.ws.onmessage = (event) => {
       try {
         const data = JSON.parse(event.data);
+        console.log("WebSocket received:", data);
         this.onMessage(data);
       } catch {
         console.error("Failed to parse WS message:", event.data);
@@ -51,8 +52,11 @@ export class GameSocket {
   }
 
   send(message: Record<string, unknown>) {
+    console.log("WebSocket sending:", message);
     if (this.ws?.readyState === WebSocket.OPEN) {
       this.ws.send(JSON.stringify(message));
+    } else {
+      console.error("WebSocket not open, readyState:", this.ws?.readyState);
     }
   }
 

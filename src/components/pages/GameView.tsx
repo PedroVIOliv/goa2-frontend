@@ -1,4 +1,5 @@
 import { useParams, useSearchParams } from "react-router-dom";
+import { useCallback } from "react";
 import { useGameSocket } from "../../hooks/useGameSocket";
 import { HexGrid } from "../board/HexGrid";
 import { PhaseBar } from "../ui/PhaseBar";
@@ -28,8 +29,30 @@ export function GameView() {
     myHeroId,
     commitCard,
     passTurn,
-    submitInput,
+    submitInput: rawSubmitInput,
   } = useGameSocket(gameId ?? "", token);
+
+  const submitInput = useCallback((value: string | number | Hex | null) => {
+    console.log("submitInput called with value:", value);
+    rawSubmitInput(value);
+  }, [rawSubmitInput]);
+
+  const handleHexClick = useCallback((hex: Hex) => {
+    submitInput(hex);
+  }, [submitInput]);
+
+  const handleUnitClick = useCallback((unitId: string) => {
+    submitInput(unitId);
+  }, [submitInput]);
+
+  const handleOptionSelect = useCallback((value: string | number | null) => {
+    console.log("handleOptionSelect called with value:", value);
+    submitInput(value);
+  }, [submitInput]);
+
+  const handleSkip = useCallback(() => {
+    submitInput(null);
+  }, [submitInput]);
 
   if (!view) {
     return <div className={styles.loading}>Connecting...</div>;
@@ -41,21 +64,12 @@ export function GameView() {
   const needsBanner =
     isMyInput && inputRequest && BOARD_INPUT_TYPES.has(inputRequest.type);
 
-  const handleHexClick = (hex: Hex) => {
-    submitInput(hex);
-  };
-
-  const handleUnitClick = (unitId: string) => {
-    submitInput(unitId);
-  };
-
-  const handleOptionSelect = (value: string | number | null) => {
-    submitInput(value);
-  };
-
-  const handleSkip = () => {
-    submitInput(null);
-  };
+  console.log("GameView render:", {
+    isMyInput,
+    needsPicker,
+    inputRequest: inputRequest ? { type: inputRequest.type, prompt: inputRequest.prompt } : null,
+    myHeroId
+  });
 
   return (
     <div className={styles.layout}>

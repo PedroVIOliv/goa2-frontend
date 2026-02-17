@@ -7,6 +7,7 @@ interface Props {
 }
 
 export function OptionPicker({ inputRequest, onSelect }: Props) {
+  console.log("OptionPicker render:", { type: inputRequest.type, prompt: inputRequest.prompt });
   const type = inputRequest.type;
 
   let displayOptions: { id: string; text: string }[] = [];
@@ -29,6 +30,11 @@ export function OptionPicker({ inputRequest, onSelect }: Props) {
     displayOptions = ids.map((id) => ({ id, text: id }));
   }
 
+  const handleOptionClick = (opt: { id: string; text: string }) => {
+    console.log("Option clicked:", opt);
+    onSelect(opt.id);
+  };
+
   return (
     <div className={styles.overlay}>
       <div className={styles.picker}>
@@ -36,14 +42,16 @@ export function OptionPicker({ inputRequest, onSelect }: Props) {
         {displayOptions.map((opt) => (
           <button
             key={opt.id}
+            type="button"
             className={styles.option}
-            onClick={() => onSelect(opt.id)}
+            onClick={() => handleOptionClick(opt)}
           >
             {opt.text}
           </button>
         ))}
         {inputRequest.can_skip && (
           <button
+            type="button"
             className={`${styles.option} ${styles.skip}`}
             onClick={() => onSelect(null)}
           >
