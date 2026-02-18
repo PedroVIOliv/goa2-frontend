@@ -101,7 +101,7 @@ export function useGameSocket(gameId: string, token: string) {
   );
 
   const submitInput = useCallback(
-    (selection: string | Hex | number | null) =>
+    (selection: string | Hex | number | null | { hero_id: string; card_id: string }) =>
       send({ type: "SUBMIT_INPUT", selection }),
     [send]
   );

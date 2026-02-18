@@ -32,7 +32,7 @@ export function GameView() {
     submitInput: rawSubmitInput,
   } = useGameSocket(gameId ?? "", token);
 
-  const submitInput = useCallback((value: string | number | Hex | null) => {
+  const submitInput = useCallback((value: string | number | Hex | null | { hero_id: string; card_id: string }) => {
     console.log("submitInput called with value:", value);
     rawSubmitInput(value);
   }, [rawSubmitInput]);
@@ -45,7 +45,7 @@ export function GameView() {
     submitInput(unitId);
   }, [submitInput]);
 
-  const handleOptionSelect = useCallback((value: string | number | null) => {
+  const handleOptionSelect = useCallback((value: string | number | null | { hero_id: string; card_id: string }) => {
     console.log("handleOptionSelect called with value:", value);
     submitInput(value);
   }, [submitInput]);
@@ -59,8 +59,12 @@ export function GameView() {
   }
 
   const isMyInput = inputRequest?.player_id === myHeroId;
+  const isMyUpgradePhase = inputRequest?.type === "UPGRADE_PHASE" &&
+                          inputRequest?.players &&
+                          myHeroId &&
+                          inputRequest.players[myHeroId];
   const needsPicker =
-    isMyInput && inputRequest && !BOARD_INPUT_TYPES.has(inputRequest.type);
+    (isMyInput || isMyUpgradePhase) && inputRequest && !BOARD_INPUT_TYPES.has(inputRequest.type);
   const needsBanner =
     isMyInput && inputRequest && BOARD_INPUT_TYPES.has(inputRequest.type);
 
@@ -95,6 +99,7 @@ export function GameView() {
           {needsPicker && inputRequest && (
             <OptionPicker
               inputRequest={inputRequest}
+              myHeroId={myHeroId ?? ""}
               onSelect={handleOptionSelect}
             />
           )}

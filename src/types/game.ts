@@ -130,6 +130,25 @@ export interface InputOption {
   [key: string]: unknown;
 }
 
+export interface UpgradeCardDetail {
+  id: string;
+  name: string;
+  item: string | null;
+  [key: string]: unknown;
+}
+
+export interface UpgradeOption {
+  color: string;
+  tier: string;
+  pair: [string, string];
+  card_details: [UpgradeCardDetail, UpgradeCardDetail];
+}
+
+export interface UpgradePlayerData {
+  remaining: number;
+  options: UpgradeOption[];
+}
+
 export interface InputRequest {
   type: string;
   player_id: string;
@@ -139,7 +158,7 @@ export interface InputRequest {
   valid_hexes?: Hex[];
   options?: (InputOption | string)[];
   player_ids?: string[];
-  players?: unknown;
+  players?: Record<string, UpgradePlayerData>;
   [key: string]: unknown;
 }
 
