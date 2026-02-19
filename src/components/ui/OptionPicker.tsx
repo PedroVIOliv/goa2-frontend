@@ -1,6 +1,8 @@
-import type { InputRequest } from "../../types/game";
+import type { InputRequest, UpgradeOption } from "../../types/game";
 import { CARD_COLORS } from "../../utils/colors";
+import { Tooltip } from "./Tooltip";
 import styles from "./OptionPicker.module.css";
+import tooltipStyles from "./Tooltip.module.css";
 
 interface Props {
   inputRequest: InputRequest;
@@ -13,7 +15,7 @@ export function OptionPicker({ inputRequest, myHeroId, onSelect }: Props) {
   const type = inputRequest.type;
 
   const isUpgradePhase = type === "UPGRADE_PHASE";
-  const players = inputRequest.players as Record<string, { remaining: number; options: { color: string; tier: string; pair: [string, string]; card_details: [{ id: string; name: string; item: string | null }, { id: string; name: string; item: string | null }] }[] }> | undefined;
+  const players = inputRequest.players as Record<string, { remaining: number; options: UpgradeOption[] }> | undefined;
   const myUpgradeData = players?.[myHeroId];
 
   let displayOptions: { id: string; text: string }[] = [];
@@ -57,6 +59,29 @@ export function OptionPicker({ inputRequest, myHeroId, onSelect }: Props) {
     onSelect({ hero_id: myHeroId, card_id: cardId });
   };
 
+  const getTierClass = (tier: string) => {
+    if (!tier) return "";
+    return `tier-${tier.toLowerCase()}`;
+  };
+
+  const formatActionName = (action: string) => {
+    const names: Record<string, string> = {
+      MOVEMENT: "Movement",
+      ATTACK: "Attack",
+      DEFENSE: "Defense",
+      SKILL: "Skill",
+      DEFENSE_SKILL: "Defense Skill",
+      HOLD: "Hold",
+      CLEAR: "Clear",
+      FAST_TRAVEL: "Fast Travel",
+    };
+    return names[action] || action;
+  };
+
+  const getActionClass = (action: string) => {
+    return `action-${action.toLowerCase()}`;
+  };
+
   if (isUpgradePhase && myUpgradeData) {
     return (
       <div className={styles.overlay}>
@@ -76,17 +101,97 @@ export function OptionPicker({ inputRequest, myHeroId, onSelect }: Props) {
                   </span>
                 </div>
                 <div className={styles.cardPair}>
-                  {option.card_details.map((card) => (
-                    <button
-                      key={card.id}
-                      type="button"
-                      className={styles.upgradeCard}
-                      onClick={() => handleCardSelect(card.id)}
-                    >
-                      <div className={styles.cardName}>{card.name}</div>
-                      {card.item && <div className={styles.cardItem}>{card.item}</div>}
-                    </button>
-                  ))}
+                  {option.card_details.map((card) => {
+                    const hasTooltip = card.effect_text || (card.secondary_actions && Object.keys(card.secondary_actions).length > 0) || card.is_ranged || card.radius_value;
+
+                    const tooltipContent = (
+                      <div className={tooltipStyles.goaTooltip}>
+                        <div className={tooltipStyles.goaTooltipHeader}>
+                          <span className={tooltipStyles.goaTooltipTitle}>{card.name}</span>
+                          {card.tier && (
+                            <span className={`${tooltipStyles.goaTooltipTier} ${tooltipStyles[getTierClass(card.tier)]}`}>
+                              {card.tier === "I" || card.tier === "II" || card.tier === "III"
+                                ? `Tier ${card.tier}`
+                                : card.tier}
+                            </span>
+                          )}
+                        </div>
+
+                        {card.effect_text && (
+                          <div className={tooltipStyles.goaTooltipEffect}>{card.effect_text}</div>
+                        )}
+
+                        <div className={tooltipStyles.goaTooltipStats}>
+                          {card.primary_action && card.primary_action_value && (
+                            <div className={tooltipStyles.goaTooltipStat}>
+                              <span className={tooltipStyles.goaTooltipStatLabel}>Primary Action:</span>
+                              <span className={`${tooltipStyles.goaTooltipStatValue} primary`}>
+                                {formatActionName(card.primary_action)} {card.primary_action_value}
+                              </span>
+                            </div>
+                          )}
+
+                          {card.is_ranged && card.range_value && (
+                            <div className={tooltipStyles.goaTooltipStat}>
+                              <span className={tooltipStyles.goaTooltipStatLabel}>Range:</span>
+                              <span className={`${tooltipStyles.goaTooltipStatValue} range`}>
+                                {card.range_value} hexes
+                              </span>
+                            </div>
+                          )}
+
+                          {card.radius_value && (
+                            <div className={tooltipStyles.goaTooltipStat}>
+                              <span className={tooltipStyles.goaTooltipStatLabel}>Radius:</span>
+                              <span className={tooltipStyles.goaTooltipStatValue}>
+                                {card.radius_value} hexes
+                              </span>
+                            </div>
+                          )}
+
+                          {card.item && (
+                            <div className={tooltipStyles.goaTooltipStat}>
+                              <span className={tooltipStyles.goaTooltipStatLabel}>Item Bonus:</span>
+                              <span className={tooltipStyles.goaTooltipStatValue}>
+                                {card.item}
+                              </span>
+                            </div>
+                          )}
+                        </div>
+
+                        {card.secondary_actions && Object.keys(card.secondary_actions).length > 0 && (
+                          <div className={tooltipStyles.goaTooltipSecondary}>
+                            {Object.entries(card.secondary_actions).map(([action, value]) => (
+                              <span
+                                key={action}
+                                className={`${tooltipStyles.goaTooltipSecondaryAction} ${tooltipStyles[getActionClass(action)]}`}
+                              >
+                                {formatActionName(action)}: {value}
+                              </span>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    );
+
+                    const cardButton = (
+                      <button
+                        key={card.id}
+                        type="button"
+                        className={styles.upgradeCard}
+                        onClick={() => handleCardSelect(card.id)}
+                      >
+                        <div className={styles.cardName}>{card.name}</div>
+                        {card.item && <div className={styles.cardItem}>{card.item}</div>}
+                      </button>
+                    );
+
+                    return hasTooltip ? (
+                      <Tooltip key={card.id} content={tooltipContent}>
+                        {cardButton}
+                      </Tooltip>
+                    ) : cardButton;
+                  })}
                 </div>
               </div>
             ))}

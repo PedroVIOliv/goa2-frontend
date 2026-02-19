@@ -134,7 +134,16 @@ export interface UpgradeCardDetail {
   id: string;
   name: string;
   item: string | null;
-  [key: string]: unknown;
+  tier: string | null;
+  color: string | null;
+  primary_action: string | null;
+  primary_action_value: number | null;
+  secondary_actions: Record<string, number>;
+  effect_text: string | null;
+  initiative: number | null;
+  is_ranged: boolean;
+  range_value: number | null;
+  radius_value: number | null;
 }
 
 export interface UpgradeOption {
