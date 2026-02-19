@@ -87,16 +87,16 @@
   color: #ccc;
 }
 
-.goa-tooltip-stat-value.primary {
+.goa-tooltip-stat-value:global(.primary) {
   color: #64b5f6;
   font-weight: 500;
 }
 
-.goa-tooltip-stat-value.range {
+.goa-tooltip-stat-value:global(.range) {
   color: #ffb74d;
 }
 
-.goa-tooltip-stat-value.initiative {
+.goa-tooltip-stat-value:global(.initiative) {
   color: #81c784;
 }
 

@@ -16,7 +16,8 @@ export function CardRow({ card, isSelected, onClick }: Props) {
 
   const getTierClass = () => {
     if (!card.tier) return "";
-    return `tier-${card.tier.toLowerCase()}`;
+    const tierMap: Record<string, string> = { i: "tierI", ii: "tierIi", iii: "tierIii", iv: "tierIv" };
+    return tierMap[card.tier.toLowerCase()] || `tier${card.tier}`;
   };
 
   const formatActionName = (action: string) => {
@@ -34,7 +35,14 @@ export function CardRow({ card, isSelected, onClick }: Props) {
   };
 
   const getActionClass = (action: string) => {
-    return `action-${action.toLowerCase()}`;
+    const actionMap: Record<string, string> = {
+      MOVEMENT: "actionMovement",
+      ATTACK: "actionAttack",
+      DEFENSE: "actionDefense",
+      SKILL: "actionSkill",
+      DEFENSE_SKILL: "actionDefenseSkill",
+    };
+    return actionMap[action] || "";
   };
 
   const tooltipContent = (
@@ -55,11 +63,11 @@ export function CardRow({ card, isSelected, onClick }: Props) {
       )}
 
       <div className={styles.goaTooltipStats}>
-        {card.primary_action && card.primary_action_value && (
+        {card.primary_action && (
           <div className={styles.goaTooltipStat}>
             <span className={styles.goaTooltipStatLabel}>Primary Action:</span>
             <span className={`${styles.goaTooltipStatValue} primary`}>
-              {formatActionName(card.primary_action)} {card.primary_action_value}
+              {formatActionName(card.primary_action)}{card.primary_action_value != null && !["HOLD", "CLEAR", "FAST_TRAVEL"].includes(card.primary_action) ? ` ${card.primary_action_value}` : ""}
             </span>
           </div>
         )}
@@ -99,7 +107,7 @@ export function CardRow({ card, isSelected, onClick }: Props) {
               key={action}
               className={`${styles.goaTooltipSecondaryAction} ${styles[getActionClass(action)]}`}
             >
-              {formatActionName(action)}: {value}
+              {formatActionName(action)}{!["HOLD", "CLEAR", "FAST_TRAVEL"].includes(action) ? `: ${value}` : ""}
             </span>
           ))}
         </div>
@@ -135,7 +143,7 @@ export function CardRow({ card, isSelected, onClick }: Props) {
       {card.primary_action && (
         <span style={{ color: "var(--text-secondary)", fontSize: 11 }}>
           {card.primary_action[0]}
-          {card.primary_action_value ? `:${card.primary_action_value}` : ""}
+          {card.primary_action_value != null && !["HOLD", "CLEAR", "FAST_TRAVEL"].includes(card.primary_action) ? `:${card.primary_action_value}` : ""}
         </span>
       )}
       <span style={{ color: "var(--text-secondary)", fontSize: 11 }}>

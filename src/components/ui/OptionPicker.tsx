@@ -61,7 +61,8 @@ export function OptionPicker({ inputRequest, myHeroId, onSelect }: Props) {
 
   const getTierClass = (tier: string) => {
     if (!tier) return "";
-    return `tier-${tier.toLowerCase()}`;
+    const tierMap: Record<string, string> = { i: "tierI", ii: "tierIi", iii: "tierIii", iv: "tierIv" };
+    return tierMap[tier.toLowerCase()] || `tier${tier}`;
   };
 
   const formatActionName = (action: string) => {
@@ -79,7 +80,14 @@ export function OptionPicker({ inputRequest, myHeroId, onSelect }: Props) {
   };
 
   const getActionClass = (action: string) => {
-    return `action-${action.toLowerCase()}`;
+    const actionMap: Record<string, string> = {
+      MOVEMENT: "actionMovement",
+      ATTACK: "actionAttack",
+      DEFENSE: "actionDefense",
+      SKILL: "actionSkill",
+      DEFENSE_SKILL: "actionDefenseSkill",
+    };
+    return actionMap[action] || "";
   };
 
   if (isUpgradePhase && myUpgradeData) {
@@ -122,11 +130,11 @@ export function OptionPicker({ inputRequest, myHeroId, onSelect }: Props) {
                         )}
 
                         <div className={tooltipStyles.goaTooltipStats}>
-                          {card.primary_action && card.primary_action_value && (
+                          {card.primary_action && (
                             <div className={tooltipStyles.goaTooltipStat}>
                               <span className={tooltipStyles.goaTooltipStatLabel}>Primary Action:</span>
                               <span className={`${tooltipStyles.goaTooltipStatValue} primary`}>
-                                {formatActionName(card.primary_action)} {card.primary_action_value}
+                                {formatActionName(card.primary_action)}{card.primary_action_value != null && !["HOLD", "CLEAR", "FAST_TRAVEL"].includes(card.primary_action) ? ` ${card.primary_action_value}` : ""}
                               </span>
                             </div>
                           )}
@@ -166,7 +174,7 @@ export function OptionPicker({ inputRequest, myHeroId, onSelect }: Props) {
                                 key={action}
                                 className={`${tooltipStyles.goaTooltipSecondaryAction} ${tooltipStyles[getActionClass(action)]}`}
                               >
-                                {formatActionName(action)}: {value}
+                                {formatActionName(action)}{!["HOLD", "CLEAR", "FAST_TRAVEL"].includes(action) ? `: ${value}` : ""}
                               </span>
                             ))}
                           </div>
