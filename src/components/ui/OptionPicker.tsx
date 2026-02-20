@@ -41,6 +41,9 @@ export function OptionPicker({ inputRequest, myHeroId, onSelect }: Props) {
   } else if (type === "CONFIRM_PASSIVE" || type === "CHOOSE_RESPAWN") {
     const opts = (inputRequest.options as string[]) ?? ["YES", "NO"];
     displayOptions = opts.map((o) => ({ id: o, text: o }));
+  } else if (type === "SELECT_CARD") {
+    const opts = (inputRequest.valid_options as string[]) ?? [];
+    displayOptions = opts.map((o) => ({ id: o, text: o }));
   } else if (type === "SELECT_CARD_OR_PASS") {
     const opts = (inputRequest.options as string[]) ?? [];
     displayOptions = opts.map((o) => ({ id: o, text: o === "PASS" ? "Pass (no defense)" : o }));
