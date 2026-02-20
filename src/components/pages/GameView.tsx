@@ -1,5 +1,5 @@
 import { useParams, useSearchParams } from "react-router-dom";
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import { useGameSocket } from "../../hooks/useGameSocket";
 import { HexGrid } from "../board/HexGrid";
 import { PhaseBar } from "../ui/PhaseBar";
@@ -55,11 +55,23 @@ export function GameView() {
     submitInput(null);
   }, [submitInput]);
 
+  const myTeam = useMemo(() => {
+    if (!myHeroId || !view) return null;
+    for (const [teamColor, team] of Object.entries(view.teams)) {
+      if (team.heroes.some(h => h.id === myHeroId)) {
+        return teamColor;
+      }
+    }
+    return null;
+  }, [view, myHeroId]);
+
   if (!view) {
     return <div className={styles.loading}>Connecting...</div>;
   }
 
-  const isMyInput = inputRequest?.player_id === myHeroId;
+  const isMyInput = inputRequest?.player_id === myHeroId ||
+                   (inputRequest?.player_id?.startsWith('team:') &&
+                    inputRequest.player_id === `team:${myTeam}`);
   const isMyUpgradePhase = inputRequest?.type === "UPGRADE_PHASE" &&
                           inputRequest?.players &&
                           myHeroId &&
@@ -88,6 +100,7 @@ export function GameView() {
             myHeroId={myHeroId}
             onHexClick={handleHexClick}
             onUnitClick={handleUnitClick}
+            isMyInput={isMyInput}
           />
 
           {needsBanner && inputRequest && (

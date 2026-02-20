@@ -7,12 +7,13 @@ import styles from "./HexGrid.module.css";
 interface Props {
   view: GameView;
   inputRequest: InputRequest | null;
-  myHeroId: string | null;
+  myHeroId?: string | null;
   onHexClick: (hex: Hex) => void;
   onUnitClick: (unitId: string) => void;
+  isMyInput?: boolean;
 }
 
-export function HexGrid({ view, inputRequest, myHeroId, onHexClick, onUnitClick }: Props) {
+export function HexGrid({ view, inputRequest, onHexClick, onUnitClick, isMyInput = false }: Props) {
   const unitLookup = useMemo(() => {
     const heroes = new Map<string, HeroView>();
     const minions = new Map<string, MinionView>();
@@ -24,17 +25,17 @@ export function HexGrid({ view, inputRequest, myHeroId, onHexClick, onUnitClick 
   }, [view.teams]);
 
   const validHexes = useMemo((): Hex[] => {
-    if (!inputRequest || inputRequest.player_id !== myHeroId) return [];
+    if (!inputRequest || !isMyInput) return [];
     return inputRequest.valid_hexes ?? inputRequest.valid_options?.filter(isHex) as Hex[] ?? [];
-  }, [inputRequest, myHeroId]);
+  }, [inputRequest, isMyInput]);
 
   const validUnitIds = useMemo((): string[] => {
-    if (!inputRequest || inputRequest.player_id !== myHeroId) return [];
+    if (!inputRequest || !isMyInput) return [];
     if (inputRequest.type === "SELECT_UNIT" || inputRequest.type === "SELECT_UNIT_OR_TOKEN") {
       return (inputRequest.valid_options as string[]) ?? [];
     }
     return [];
-  }, [inputRequest, myHeroId]);
+  }, [inputRequest, isMyInput]);
 
   const { tiles, viewBox } = useMemo(() => {
     const tileEntries = Object.values(view.board.tiles).filter((t) => !t.is_terrain);
