@@ -233,7 +233,7 @@ export function OptionPicker({ inputRequest, myHeroId, onSelect }: Props) {
           <button
             type="button"
             className={`${styles.option} ${styles.skip}`}
-            onClick={() => onSelect(null)}
+            onClick={() => onSelect("SKIP")}
           >
             Skip
           </button>

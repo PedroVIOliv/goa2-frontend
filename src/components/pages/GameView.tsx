@@ -46,13 +46,13 @@ export function GameView() {
     submitInput(unitId);
   }, [submitInput]);
 
-  const handleOptionSelect = useCallback((value: string | number | null | { hero_id: string; card_id: string }) => {
+  const handleOptionSelect = useCallback((value: string | number | "SKIP" | null | { hero_id: string; card_id: string }) => {
     console.log("handleOptionSelect called with value:", value);
     submitInput(value);
   }, [submitInput]);
 
   const handleSkip = useCallback(() => {
-    submitInput(null);
+    submitInput("SKIP");
   }, [submitInput]);
 
   const myTeam = useMemo(() => {
