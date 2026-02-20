@@ -38,7 +38,7 @@ export function OptionPicker({ inputRequest, myHeroId, onSelect }: Props) {
         ? { id: opt, text: opt }
         : { id: (opt as { id: string }).id, text: (opt as { id: string; text: string }).text }
     );
-  } else if (type === "CONFIRM_PASSIVE") {
+  } else if (type === "CONFIRM_PASSIVE" || type === "CHOOSE_RESPAWN") {
     const opts = (inputRequest.options as string[]) ?? ["YES", "NO"];
     displayOptions = opts.map((o) => ({ id: o, text: o }));
   } else if (type === "SELECT_CARD_OR_PASS") {
@@ -47,6 +47,9 @@ export function OptionPicker({ inputRequest, myHeroId, onSelect }: Props) {
   } else if (type === "CHOOSE_ACTOR") {
     const ids = inputRequest.player_ids ?? [];
     displayOptions = ids.map((id) => ({ id, text: id }));
+  } else if (type === "SELECT_NUMBER") {
+    const nums = inputRequest.valid_options ?? [];
+    displayOptions = nums.map((n) => ({ id: String(n), text: String(n) }));
   }
 
   const handleOptionClick = (opt: { id: string; text: string }) => {

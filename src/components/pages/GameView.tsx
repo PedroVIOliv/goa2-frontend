@@ -14,6 +14,7 @@ const BOARD_INPUT_TYPES = new Set([
   "SELECT_HEX",
   "SELECT_UNIT",
   "SELECT_UNIT_OR_TOKEN",
+  "CHOOSE_RESPAWN_HEX",
 ]);
 
 export function GameView() {
