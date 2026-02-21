@@ -7,6 +7,7 @@ export function CreateGame() {
   const [heroes, setHeroes] = useState<string[]>([]);
   const [redHero, setRedHero] = useState("");
   const [blueHero, setBlueHero] = useState("");
+  const [cheatsEnabled, setCheatsEnabled] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<CreateGameResponse | null>(null);
@@ -28,7 +29,7 @@ export function CreateGame() {
     setLoading(true);
     setError(null);
     try {
-      const res = await createGame([redHero], [blueHero]);
+      const res = await createGame([redHero], [blueHero], "forgotten_island", cheatsEnabled);
       setResult(res);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to create game");
@@ -70,6 +71,17 @@ export function CreateGame() {
                   <option key={h} value={h}>{h}</option>
                 ))}
               </select>
+            </div>
+
+            <div className={styles.field}>
+              <label className={styles.checkboxLabel}>
+                <input
+                  type="checkbox"
+                  checked={cheatsEnabled}
+                  onChange={(e) => setCheatsEnabled(e.target.checked)}
+                />
+                <span>Enable Cheats</span>
+              </label>
             </div>
 
             <button

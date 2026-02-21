@@ -31,6 +31,24 @@
   margin-bottom: 4px;
 }
 
+.checkboxLabel {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  color: var(--text-primary);
+  cursor: pointer;
+  user-select: none;
+}
+
+.checkboxLabel input[type="checkbox"] {
+  margin-right: 8px;
+  cursor: pointer;
+}
+
+.checkboxLabel span {
+  user-select: none;
+}
+
 .select, .input {
   width: 100%;
   padding: 8px 12px;

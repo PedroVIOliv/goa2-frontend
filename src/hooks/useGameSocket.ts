@@ -111,12 +111,19 @@ export function useGameSocket(gameId: string, token: string) {
     [send]
   );
 
+  const cheatsGold = useCallback(
+    (heroId: string, amount: number) =>
+      send({ type: "CHEATS_GOLD", hero_id: heroId, amount }),
+    [send]
+  );
+
   return {
     ...state,
     commitCard,
     passTurn,
     submitInput,
     requestView,
+    cheatsGold,
   };
 }
 

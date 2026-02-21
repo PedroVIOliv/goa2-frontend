@@ -117,6 +117,7 @@ export interface GameView {
   current_actor_id: string | null;
   unresolved_hero_ids: string[];
   active_zone_id: string | null;
+  cheats_enabled: boolean;
   teams: Record<string, TeamView>;
   board: BoardView;
   effects: EffectView[];

@@ -31,6 +31,7 @@ export function GameView() {
     commitCard,
     passTurn,
     submitInput: rawSubmitInput,
+    cheatsGold,
   } = useGameSocket(gameId ?? "", token);
 
   const submitInput = useCallback((value: string | number | Hex | null | { hero_id: string; card_id: string }) => {
@@ -124,6 +125,7 @@ export function GameView() {
           myHeroId={myHeroId}
           onCommit={commitCard}
           onPass={passTurn}
+          onGiveGold={cheatsGold}
         />
       </div>
 

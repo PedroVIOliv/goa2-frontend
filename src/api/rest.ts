@@ -11,7 +11,8 @@ export async function fetchHeroes(): Promise<string[]> {
 export async function createGame(
   redHeroes: string[],
   blueHeroes: string[],
-  mapName: string = "forgotten_island"
+  mapName: string = "forgotten_island",
+  cheatsEnabled: boolean = false
 ): Promise<CreateGameResponse> {
   const res = await fetch(`${API_BASE}/games`, {
     method: "POST",
@@ -20,6 +21,7 @@ export async function createGame(
       map_name: mapName,
       red_heroes: redHeroes,
       blue_heroes: blueHeroes,
+      cheats_enabled: cheatsEnabled,
     }),
   });
   if (!res.ok) {
