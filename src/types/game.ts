@@ -128,6 +128,11 @@ export interface GameView {
 export interface InputOption {
   id: string;
   text: string;
+  metadata?: {
+    defense_value?: number;
+    base_defense?: number;
+    [key: string]: unknown;
+  };
   [key: string]: unknown;
 }
 
@@ -169,6 +174,9 @@ export interface InputRequest {
   options?: (InputOption | string)[];
   player_ids?: string[];
   players?: Record<string, UpgradePlayerData>;
+  attack_value?: number | null;
+  minion_modifier?: number;
+  defense_needed?: number | null;
   [key: string]: unknown;
 }
 

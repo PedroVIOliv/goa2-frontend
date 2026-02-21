@@ -18,7 +18,7 @@ export function OptionPicker({ inputRequest, myHeroId, onSelect }: Props) {
   const players = inputRequest.players as Record<string, { remaining: number; options: UpgradeOption[] }> | undefined;
   const myUpgradeData = players?.[myHeroId];
 
-  let displayOptions: { id: string; text: string }[] = [];
+  let displayOptions: { id: string; text: string; metadata?: { defense_value?: number; base_defense?: number } }[] = [];
 
   if (isUpgradePhase) {
     if (!myUpgradeData) {
@@ -31,6 +31,9 @@ export function OptionPicker({ inputRequest, myHeroId, onSelect }: Props) {
         </div>
       );
     }
+  } else if (type === "DEFENSE_CARD") {
+    const opts = inputRequest.options as Array<{ id: string; text: string; metadata?: { defense_value?: number; base_defense?: number } }> | undefined;
+    displayOptions = opts ?? [];
   } else if (type === "CHOOSE_ACTION" || type === "SELECT_OPTION") {
     const opts = inputRequest.options ?? [];
     displayOptions = opts.map((opt) =>
@@ -209,6 +212,69 @@ export function OptionPicker({ inputRequest, myHeroId, onSelect }: Props) {
                 </div>
               </div>
             ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (type === "DEFENSE_CARD") {
+    return (
+      <div className={styles.overlay}>
+        <div className={styles.picker}>
+          <div className={styles.title}>{inputRequest.prompt}</div>
+          {inputRequest.attack_value !== undefined && inputRequest.attack_value !== null && (
+            <div className={styles.combatContext}>
+              <div className={styles.combatStat}>
+                <span className={styles.combatLabel}>Attack:</span>
+                <span className={styles.combatValue}>{inputRequest.attack_value}</span>
+              </div>
+              {inputRequest.minion_modifier !== undefined && inputRequest.minion_modifier !== 0 && (
+                <div className={styles.combatStat}>
+                  <span className={styles.combatLabel}>Minion bonus:</span>
+                  <span className={`${styles.combatValue} ${styles.positive}`}>+{inputRequest.minion_modifier}</span>
+                </div>
+              )}
+              {inputRequest.defense_needed !== undefined && inputRequest.defense_needed !== null && (
+                <div className={styles.combatStat}>
+                  <span className={styles.combatLabel}>Defense needed:</span>
+                  <span className={styles.combatValue}>{inputRequest.defense_needed}</span>
+                </div>
+              )}
+            </div>
+          )}
+          <div className={styles.optionsList}>
+            {displayOptions.map((opt) => {
+              const defenseValue = opt.metadata?.defense_value;
+              const isPass = opt.id === "PASS";
+              const canBlock = defenseValue !== undefined && inputRequest.defense_needed !== undefined &&
+                              inputRequest.defense_needed !== null &&
+                              defenseValue >= inputRequest.defense_needed;
+
+              return (
+                <button
+                  key={opt.id}
+                  type="button"
+                  className={`${styles.option} ${isPass ? styles.passOption : ""} ${canBlock ? styles.canBlock : styles.cannotBlock}`}
+                  onClick={() => handleOptionClick(opt)}
+                >
+                  <div className={styles.optionMain}>
+                    <span className={styles.optionText}>{opt.text}</span>
+                    {!isPass && defenseValue !== undefined && (
+                      <span className={`${styles.defenseBadge} ${canBlock ? styles.badgeGood : styles.badgeInsufficient}`}>
+                        Def: {defenseValue}
+                      </span>
+                    )}
+                  </div>
+                  {defenseValue !== undefined && opt.metadata?.base_defense !== undefined && (
+                    <div className={styles.optionSubtext}>
+                      Base: {opt.metadata.base_defense}
+                      {defenseValue > opt.metadata.base_defense && ` (+${defenseValue - opt.metadata.base_defense})`}
+                    </div>
+                  )}
+                </button>
+              );
+            })}
           </div>
         </div>
       </div>

@@ -84,6 +84,7 @@ export function HexGrid({ view, inputRequest, onHexClick, onUnitClick, isMyInput
               occupantId={occupantId}
               hero={hero}
               minion={minion}
+              spawnPoint={tile.spawn_point}
               isValidTarget={isValid}
               isCurrentActor={occupantId === view.current_actor_id}
               onClick={() => {

@@ -1,7 +1,8 @@
 import { hexCorners } from "../../utils/hex";
 import { ZONE_COLORS } from "../../utils/colors";
 import { UnitToken } from "./UnitToken";
-import type { Hex, HeroView, MinionView } from "../../types/game";
+import { SpawnPointMarker } from "./SpawnPointMarker";
+import type { Hex, HeroView, MinionView, SpawnPointView } from "../../types/game";
 
 interface Props {
   hex: Hex;
@@ -11,6 +12,7 @@ interface Props {
   occupantId: string | null;
   hero?: HeroView;
   minion?: MinionView;
+  spawnPoint?: SpawnPointView | null;
   isValidTarget: boolean;
   isCurrentActor: boolean;
   onClick?: () => void;
@@ -23,6 +25,7 @@ export function HexTile({
   occupantId,
   hero,
   minion,
+  spawnPoint,
   isValidTarget,
   isCurrentActor,
   onClick,
@@ -58,6 +61,9 @@ export function HexTile({
           minion={minion}
           isCurrentActor={isCurrentActor}
         />
+      )}
+      {spawnPoint && !occupantId && (
+        <SpawnPointMarker spawnPoint={spawnPoint} />
       )}
     </g>
   );
