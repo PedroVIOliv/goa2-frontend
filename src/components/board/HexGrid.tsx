@@ -48,7 +48,7 @@ export function HexGrid({ view, inputRequest, onHexClick, onUnitClick, isMyInput
 
     const xs = positions.map((p) => p.x);
     const ys = positions.map((p) => p.y);
-    const pad = 40;
+    const pad = 50;
     const minX = Math.min(...xs) - pad;
     const minY = Math.min(...ys) - pad;
     const maxX = Math.max(...xs) + pad;
@@ -62,7 +62,7 @@ export function HexGrid({ view, inputRequest, onHexClick, onUnitClick, isMyInput
 
   return (
     <div className={styles.container}>
-      <svg className={styles.svg} viewBox={viewBox}>
+      <svg className={styles.svg} viewBox={viewBox} preserveAspectRatio="xMidYMid meet">
         {tiles.map(({ tile, x, y }) => {
           const occupantId = tile.occupant_id;
           const hero = occupantId ? unitLookup.heroes.get(occupantId) : undefined;
