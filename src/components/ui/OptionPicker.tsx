@@ -35,7 +35,7 @@ export function OptionPicker({ inputRequest, myHeroId, view, onSelect }: Props) 
   const players = inputRequest.players as Record<string, { remaining: number; options: UpgradeOption[] }> | undefined;
   const myUpgradeData = players?.[myHeroId];
 
-  let displayOptions: { id: string; text: string; defense_value?: number; base_defense?: number }[] = [];
+  let displayOptions: { id: string; text: string; defense_value?: number; base_defense?: number; color?: string | null }[] = [];
 
   if (isUpgradePhase) {
     if (!myUpgradeData) {
@@ -63,10 +63,14 @@ export function OptionPicker({ inputRequest, myHeroId, view, onSelect }: Props) 
     displayOptions = opts.map((o) => ({ id: o, text: o }));
   } else if (type === "SELECT_CARD") {
     const opts = (inputRequest.valid_options as string[]) ?? [];
-    displayOptions = opts.map((o) => ({ id: o, text: o }));
-  } else if (type === "SELECT_CARD_OR_PASS") {
-    const opts = (inputRequest.options as string[]) ?? [];
-    displayOptions = opts.map((o) => ({ id: o, text: o === "PASS" ? "Pass (no defense)" : o }));
+    displayOptions = opts.map((cardId) => {
+      const card = cardLookup.get(cardId);
+      return {
+        id: cardId,
+        text: card?.name || cardId,
+        color: card?.color,
+      };
+    });
   } else if (type === "CHOOSE_ACTOR") {
     const ids = inputRequest.player_ids ?? [];
     displayOptions = ids.map((id) => ({ id, text: id }));
@@ -306,16 +310,19 @@ export function OptionPicker({ inputRequest, myHeroId, view, onSelect }: Props) 
     <div className={styles.overlay}>
       <div className={styles.picker}>
         <div className={styles.title}>{inputRequest.prompt}</div>
-        {displayOptions.map((opt) => (
-          <button
-            key={opt.id}
-            type="button"
-            className={styles.option}
-            onClick={() => handleOptionClick(opt)}
-          >
-            {opt.text}
-          </button>
-        ))}
+        {displayOptions.map((opt) => {
+          const cardColor = opt.color ? CARD_COLORS[opt.color] : undefined;
+          return (
+            <button
+              key={opt.id}
+              type="button"
+              className={styles.option}
+              onClick={() => handleOptionClick(opt)}
+            >
+              <span style={cardColor ? { color: cardColor } : undefined}>{opt.text}</span>
+            </button>
+          );
+        })}
         {inputRequest.can_skip && (
           <button
             type="button"
