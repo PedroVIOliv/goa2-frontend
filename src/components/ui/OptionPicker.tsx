@@ -1,4 +1,5 @@
-import type { InputRequest, UpgradeOption } from "../../types/game";
+import { useMemo } from "react";
+import type { InputRequest, UpgradeOption, GameView, CardView } from "../../types/game";
 import { CARD_COLORS } from "../../utils/colors";
 import { Tooltip } from "./Tooltip";
 import styles from "./OptionPicker.module.css";
@@ -7,18 +8,34 @@ import tooltipStyles from "./Tooltip.module.css";
 interface Props {
   inputRequest: InputRequest;
   myHeroId: string;
+  view?: GameView;
   onSelect: (value: string | number | null | { hero_id: string; card_id: string }) => void;
 }
 
-export function OptionPicker({ inputRequest, myHeroId, onSelect }: Props) {
+export function OptionPicker({ inputRequest, myHeroId, view, onSelect }: Props) {
   console.log("OptionPicker render:", { type: inputRequest.type, prompt: inputRequest.prompt });
   const type = inputRequest.type;
+
+  const cardLookup = useMemo(() => {
+    if (!view || !myHeroId) return new Map<string, CardView>();
+    for (const team of Object.values(view.teams)) {
+      const hero = team.heroes.find(h => h.id === myHeroId);
+      if (hero) {
+        const lookup = new Map<string, CardView>();
+        for (const card of hero.hand) {
+          lookup.set(card.id, card);
+        }
+        return lookup;
+      }
+    }
+    return new Map<string, CardView>();
+  }, [view, myHeroId]);
 
   const isUpgradePhase = type === "UPGRADE_PHASE";
   const players = inputRequest.players as Record<string, { remaining: number; options: UpgradeOption[] }> | undefined;
   const myUpgradeData = players?.[myHeroId];
 
-  let displayOptions: { id: string; text: string; metadata?: { defense_value?: number; base_defense?: number } }[] = [];
+  let displayOptions: { id: string; text: string; defense_value?: number; base_defense?: number }[] = [];
 
   if (isUpgradePhase) {
     if (!myUpgradeData) {
@@ -31,8 +48,8 @@ export function OptionPicker({ inputRequest, myHeroId, onSelect }: Props) {
         </div>
       );
     }
-  } else if (type === "DEFENSE_CARD") {
-    const opts = inputRequest.options as Array<{ id: string; text: string; metadata?: { defense_value?: number; base_defense?: number } }> | undefined;
+  } else if (type === "SELECT_CARD_OR_PASS") {
+    const opts = inputRequest.options as Array<{ id: string; text: string; defense_value?: number; base_defense?: number }> | undefined;
     displayOptions = opts ?? [];
   } else if (type === "CHOOSE_ACTION" || type === "SELECT_OPTION") {
     const opts = inputRequest.options ?? [];
@@ -218,7 +235,7 @@ export function OptionPicker({ inputRequest, myHeroId, onSelect }: Props) {
     );
   }
 
-  if (type === "DEFENSE_CARD") {
+  if (type === "SELECT_CARD_OR_PASS") {
     return (
       <div className={styles.overlay}>
         <div className={styles.picker}>
@@ -232,7 +249,9 @@ export function OptionPicker({ inputRequest, myHeroId, onSelect }: Props) {
               {inputRequest.minion_modifier !== undefined && inputRequest.minion_modifier !== 0 && (
                 <div className={styles.combatStat}>
                   <span className={styles.combatLabel}>Minion bonus:</span>
-                  <span className={`${styles.combatValue} ${styles.positive}`}>+{inputRequest.minion_modifier}</span>
+                  <span className={`${styles.combatValue} ${inputRequest.minion_modifier > 0 ? styles.positive : styles.negative}`}>
+                    {inputRequest.minion_modifier > 0 ? '+' : ''}{inputRequest.minion_modifier}
+                  </span>
                 </div>
               )}
               {inputRequest.defense_needed !== undefined && inputRequest.defense_needed !== null && (
@@ -245,11 +264,13 @@ export function OptionPicker({ inputRequest, myHeroId, onSelect }: Props) {
           )}
           <div className={styles.optionsList}>
             {displayOptions.map((opt) => {
-              const defenseValue = opt.metadata?.defense_value;
+              const defenseValue = opt.defense_value;
               const isPass = opt.id === "PASS";
               const canBlock = defenseValue !== undefined && inputRequest.defense_needed !== undefined &&
                               inputRequest.defense_needed !== null &&
                               defenseValue >= inputRequest.defense_needed;
+              const card = cardLookup.get(opt.id);
+              const cardColor = card?.color ? CARD_COLORS[card.color] : undefined;
 
               return (
                 <button
@@ -259,17 +280,17 @@ export function OptionPicker({ inputRequest, myHeroId, onSelect }: Props) {
                   onClick={() => handleOptionClick(opt)}
                 >
                   <div className={styles.optionMain}>
-                    <span className={styles.optionText}>{opt.text}</span>
+                    <span className={styles.optionText} style={cardColor ? { color: cardColor } : undefined}>{opt.text}</span>
                     {!isPass && defenseValue !== undefined && (
                       <span className={`${styles.defenseBadge} ${canBlock ? styles.badgeGood : styles.badgeInsufficient}`}>
                         Def: {defenseValue}
                       </span>
                     )}
                   </div>
-                  {defenseValue !== undefined && opt.metadata?.base_defense !== undefined && (
+                  {defenseValue !== undefined && opt.base_defense !== undefined && (
                     <div className={styles.optionSubtext}>
-                      Base: {opt.metadata.base_defense}
-                      {defenseValue > opt.metadata.base_defense && ` (+${defenseValue - opt.metadata.base_defense})`}
+                      Base: {opt.base_defense}
+                      {defenseValue > opt.base_defense && ` (+${defenseValue - opt.base_defense})`}
                     </div>
                   )}
                 </button>

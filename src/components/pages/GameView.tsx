@@ -115,6 +115,7 @@ export function GameView() {
             <OptionPicker
               inputRequest={inputRequest}
               myHeroId={myHeroId ?? ""}
+              view={view}
               onSelect={handleOptionSelect}
             />
           )}

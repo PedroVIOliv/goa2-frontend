@@ -128,11 +128,8 @@ export interface GameView {
 export interface InputOption {
   id: string;
   text: string;
-  metadata?: {
-    defense_value?: number;
-    base_defense?: number;
-    [key: string]: unknown;
-  };
+  defense_value?: number;
+  base_defense?: number;
   [key: string]: unknown;
 }
 
