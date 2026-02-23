@@ -28,6 +28,7 @@ export function GameView() {
     error,
     connected,
     myHeroId,
+    winner,
     commitCard,
     passTurn,
     submitInput: rawSubmitInput,
@@ -91,7 +92,7 @@ export function GameView() {
 
   return (
     <div className={styles.layout}>
-      <PhaseBar view={view} />
+      <PhaseBar view={view} winner={winner} />
 
       <div className={styles.main}>
         <div className={styles.boardArea}>

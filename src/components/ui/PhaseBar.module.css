@@ -27,3 +27,17 @@
 
 .red { color: var(--team-red); }
 .blue { color: var(--team-blue); }
+
+.winner {
+  font-weight: bold;
+  font-size: 16px;
+  padding: 4px 12px;
+  border-radius: 4px;
+  background: #333;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}

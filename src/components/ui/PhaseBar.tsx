@@ -4,11 +4,13 @@ import styles from "./PhaseBar.module.css";
 
 interface Props {
   view: GameView;
+  winner: string | null;
 }
 
-export function PhaseBar({ view }: Props) {
+export function PhaseBar({ view, winner }: Props) {
   const redTeam = view.teams["RED"];
   const blueTeam = view.teams["BLUE"];
+  const isGameOver = view.phase === "GAME_OVER";
 
   return (
     <div className={styles.bar}>
@@ -28,6 +30,11 @@ export function PhaseBar({ view }: Props) {
         <span>Turn {view.turn}</span>
       </div>
       <div className={styles.info}>
+        {isGameOver && winner && (
+          <span className={`${styles.winner} ${styles[winner.toLowerCase()]}`}>
+            {winner} WINS!
+          </span>
+        )}
         <span className={`${styles.lives} ${styles.blue}`}>
           BLUE: {blueTeam?.life_counters ?? 0}
         </span>

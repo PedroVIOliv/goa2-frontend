@@ -182,6 +182,7 @@ export interface StateUpdateMessage {
   type: "STATE_UPDATE";
   view: GameView;
   input_request?: InputRequest;
+  winner?: string;
 }
 
 export interface ActionResultMessage {

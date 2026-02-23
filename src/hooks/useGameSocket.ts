@@ -15,6 +15,7 @@ interface GameState {
   error: string | null;
   connected: boolean;
   myHeroId: string | null;
+  winner: string | null;
 }
 
 export function useGameSocket(gameId: string, token: string) {
@@ -25,6 +26,7 @@ export function useGameSocket(gameId: string, token: string) {
     error: null,
     connected: false,
     myHeroId: null,
+    winner: null,
   });
 
   const socketRef = useRef<GameSocket | null>(null);
@@ -44,11 +46,13 @@ export function useGameSocket(gameId: string, token: string) {
           console.log("STATE_UPDATE received");
           console.log("  new input_request:", msg.input_request);
           console.log("  new view phase:", msg.view.phase);
+          console.log("  winner:", msg.winner);
           setState((prev) => ({
             ...prev,
             view: msg.view,
             inputRequest: msg.input_request ?? null,
             myHeroId: prev.myHeroId ?? detectHeroId(msg.view),
+            winner: msg.winner ?? null,
           }));
           break;
 
@@ -119,6 +123,7 @@ export function useGameSocket(gameId: string, token: string) {
 
   return {
     ...state,
+    winner: state.winner,
     commitCard,
     passTurn,
     submitInput,
