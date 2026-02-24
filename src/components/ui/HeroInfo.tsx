@@ -16,6 +16,7 @@ export function HeroInfo({ hero, isYou }: Props) {
   const items = getItemsDisplay(hero.items as Record<string, number>);
   const handColors = !isYou ? getHandColors(hero) : [];
   const currentCard = hero.current_turn_card;
+  const hasColoredCard = currentCard && currentCard.color;
 
   return (
     <div className={styles.container}>
@@ -54,7 +55,7 @@ export function HeroInfo({ hero, isYou }: Props) {
         {!isYou && handColors.length > 0 && " · "}
         Lv {hero.level} &middot; {hero.gold} Gold
       </div>
-      {currentCard && (
+      {hasColoredCard && (
         <div className={styles.currentCard}>
           <div className={styles.currentLabel}>Current:</div>
           <CardRow card={currentCard} />
