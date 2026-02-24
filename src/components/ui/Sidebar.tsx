@@ -35,7 +35,7 @@ export function Sidebar({ view, myHeroId, onCommit, onPass, onGiveGold }: Props)
       )}
       {myHero && (
         <>
-          <HeroInfo hero={myHero} isYou />
+          <HeroInfo hero={myHero} isYou phase={view.phase} />
           <CardList
             cards={myHero.hand}
             phase={view.phase}
@@ -43,11 +43,6 @@ export function Sidebar({ view, myHeroId, onCommit, onPass, onGiveGold }: Props)
             onCommit={onCommit}
             onPass={onPass}
           />
-          {myHero.current_turn_card && (
-            <div style={{ fontSize: 12, color: "var(--text-secondary)" }}>
-              Current card: {myHero.current_turn_card.name}
-            </div>
-          )}
         </>
       )}
       {otherHeroes.map((hero) => (

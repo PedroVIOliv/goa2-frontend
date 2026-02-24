@@ -1,18 +1,21 @@
 import { TEAM_COLORS } from "../../utils/colors";
 import { getItemsDisplay } from "../../utils/itemIcons";
 import { getHandColors, getHandColorDot } from "../../utils/handColors";
+import { CardRow } from "./CardRow";
 import type { HeroView } from "../../types/game";
 import styles from "./HeroInfo.module.css";
 
 interface Props {
   hero: HeroView;
   isYou?: boolean;
+  phase?: string;
 }
 
 export function HeroInfo({ hero, isYou }: Props) {
   const teamColor = TEAM_COLORS[hero.team] || "#888";
   const items = getItemsDisplay(hero.items as Record<string, number>);
   const handColors = !isYou ? getHandColors(hero) : [];
+  const currentCard = hero.current_turn_card;
 
   return (
     <div className={styles.container}>
@@ -51,6 +54,12 @@ export function HeroInfo({ hero, isYou }: Props) {
         {!isYou && handColors.length > 0 && " · "}
         Lv {hero.level} &middot; {hero.gold} Gold
       </div>
+      {currentCard && (
+        <div className={styles.currentCard}>
+          <div className={styles.currentLabel}>Current:</div>
+          <CardRow card={currentCard} />
+        </div>
+      )}
     </div>
   );
 }

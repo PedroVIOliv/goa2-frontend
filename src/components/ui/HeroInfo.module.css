@@ -38,3 +38,17 @@
   border-radius: 50%;
   display: inline-block;
 }
+
+.currentCard {
+  margin-top: 6px;
+  padding: 6px 8px;
+  padding-left: 8px;
+  padding-right: 8px;
+  border-top: 1px solid var(--border);
+}
+
+.currentLabel {
+  font-size: 11px;
+  color: var(--text-secondary);
+  margin-bottom: 4px;
+}
