@@ -8,10 +8,9 @@ interface Props {
   phase: string;
   canCommit: boolean;
   onCommit: (cardId: string) => void;
-  onPass: () => void;
 }
 
-export function CardList({ cards, phase, canCommit, onCommit, onPass }: Props) {
+export function CardList({ cards, phase, canCommit, onCommit }: Props) {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const isPlanning = phase === "PLANNING";
   const canAct = isPlanning && canCommit;
@@ -42,13 +41,6 @@ export function CardList({ cards, phase, canCommit, onCommit, onPass }: Props) {
             onClick={() => selectedId && onCommit(selectedId)}
           >
             Commit
-          </button>
-          <button
-            className={`${styles.btn} ${styles.pass}`}
-            disabled={!canCommit}
-            onClick={onPass}
-          >
-            Pass
           </button>
         </div>
       )}

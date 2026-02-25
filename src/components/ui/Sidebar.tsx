@@ -8,11 +8,10 @@ interface Props {
   view: GameView;
   myHeroId: string | null;
   onCommit: (cardId: string) => void;
-  onPass: () => void;
   onGiveGold?: (heroId: string, amount: number) => void;
 }
 
-export function Sidebar({ view, myHeroId, onCommit, onPass, onGiveGold }: Props) {
+export function Sidebar({ view, myHeroId, onCommit, onGiveGold }: Props) {
   let myHero: HeroView | null = null;
   const otherHeroes: HeroView[] = [];
 
@@ -41,7 +40,6 @@ export function Sidebar({ view, myHeroId, onCommit, onPass, onGiveGold }: Props)
             phase={view.phase}
             canCommit={canCommit}
             onCommit={onCommit}
-            onPass={onPass}
           />
         </>
       )}

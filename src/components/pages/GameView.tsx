@@ -30,7 +30,6 @@ export function GameView() {
     myHeroId,
     winner,
     commitCard,
-    passTurn,
     submitInput: rawSubmitInput,
     cheatsGold,
   } = useGameSocket(gameId ?? "", token);
@@ -126,7 +125,6 @@ export function GameView() {
           view={view}
           myHeroId={myHeroId}
           onCommit={commitCard}
-          onPass={passTurn}
           onGiveGold={cheatsGold}
         />
       </div>
