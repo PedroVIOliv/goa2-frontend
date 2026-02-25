@@ -44,7 +44,7 @@ export interface HeroView {
   items: Record<string, unknown>;
   hand: CardView[];
   deck: CardView[] | { count: number };
-  played_cards: CardView[];
+  played_cards: (CardView | null)[];
   current_turn_card: CardView | null;
   discard_pile: CardView[];
   ultimate_card: CardView | null;

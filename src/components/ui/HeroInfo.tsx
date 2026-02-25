@@ -2,6 +2,7 @@ import { TEAM_COLORS } from "../../utils/colors";
 import { getItemsDisplay } from "../../utils/itemIcons";
 import { getHandColors, getHandColorDot } from "../../utils/handColors";
 import { CardRow } from "./CardRow";
+import { CardPile } from "./CardPile";
 import type { HeroView } from "../../types/game";
 import styles from "./HeroInfo.module.css";
 
@@ -55,6 +56,8 @@ export function HeroInfo({ hero, isYou }: Props) {
         {!isYou && handColors.length > 0 && " · "}
         Lv {hero.level} &middot; {hero.gold} Gold
       </div>
+      <CardPile label="Played" cards={hero.played_cards} />
+      <CardPile label="Discard" cards={hero.discard_pile} />
       {hasColoredCard && (
         <div className={styles.currentCard}>
           <div className={styles.currentLabel}>Current:</div>

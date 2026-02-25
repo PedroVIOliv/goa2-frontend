@@ -8,6 +8,7 @@ interface Props {
   delay?: number;
   position?: "top" | "bottom" | "left" | "right";
   className?: string;
+  maxWidth?: string;
 }
 
 export function Tooltip({
@@ -16,6 +17,7 @@ export function Tooltip({
   delay = 200,
   position = "top",
   className = "",
+  maxWidth = "300px",
 }: Props) {
   const [isVisible, setIsVisible] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -28,24 +30,21 @@ export function Tooltip({
     if (!container || !tooltip) return;
 
     const containerRect = container.getBoundingClientRect();
-    const tooltipWidth = 300;
-    const tooltipHeight = 150;
+    const tooltipRect = tooltip.getBoundingClientRect();
+    const tooltipWidth = tooltipRect.width;
+    const tooltipHeight = tooltipRect.height;
     const margin = 20;
-    const padding = 10;
 
     const screenWidth = window.innerWidth;
     const screenHeight = window.innerHeight;
     const spaceAbove = containerRect.top;
     const spaceBelow = screenHeight - containerRect.bottom;
-    const spaceLeft = containerRect.left;
-    const spaceRight = screenWidth - containerRect.right;
 
-    let horizontalPos = "center";
     let verticalPos = "top";
 
-    if (spaceBelow >= tooltipHeight + margin * 2) {
+    if (spaceBelow >= tooltipHeight + margin) {
       verticalPos = "bottom";
-    } else if (spaceAbove >= tooltipHeight + margin * 2) {
+    } else if (spaceAbove >= tooltipHeight + margin) {
       verticalPos = "top";
     } else if (spaceBelow > spaceAbove) {
       verticalPos = "bottom";
@@ -53,45 +52,20 @@ export function Tooltip({
       verticalPos = "top";
     }
 
-    if (spaceRight >= tooltipWidth + margin * 2) {
-      horizontalPos = "left";
-    } else if (spaceLeft >= tooltipWidth + margin * 2) {
-      horizontalPos = "right";
-    } else if (spaceRight > spaceLeft) {
-      horizontalPos = "left";
-    } else {
-      horizontalPos = "right";
-    }
-
     let top = 0;
     let left = 0;
 
     switch (verticalPos) {
       case "top":
-        top = containerRect.top - tooltipHeight - margin + padding;
+        top = containerRect.top - tooltipHeight - margin;
         break;
       case "bottom":
         top = containerRect.bottom + margin;
         break;
     }
 
-    switch (horizontalPos) {
-      case "left":
-        left = Math.min(
-          containerRect.left,
-          screenWidth - tooltipWidth - margin
-        );
-        break;
-      case "right":
-        left = Math.max(
-          containerRect.right - tooltipWidth,
-          margin
-        );
-        break;
-      case "center":
-        left = containerRect.left + containerRect.width / 2 - tooltipWidth / 2;
-        break;
-    }
+    // Align right edge of tooltip to right edge of container, then clamp
+    left = containerRect.right - tooltipWidth;
 
     if (top < margin) {
       top = margin;
@@ -203,7 +177,7 @@ export function Tooltip({
               border: "1px solid #333",
               borderRadius: "6px",
               padding: "12px",
-              maxWidth: "300px",
+              maxWidth,
               boxShadow: "0 4px 12px rgba(0, 0, 0, 0.5)",
               color: "#e0e0e0",
               fontSize: "13px",
