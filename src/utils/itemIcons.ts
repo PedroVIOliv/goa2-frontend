@@ -17,37 +17,37 @@ export const ITEM_ORDER: string[] = [
 export const ITEM_CONFIGS: Record<string, ItemConfig> = {
   ATTACK: {
     key: 'ATTACK',
-    icon: '⚔️',
+    icon: '/icons/attack.png',
     color: '#e57373',
     label: 'Attack',
   },
   DEFENSE: {
     key: 'DEFENSE',
-    icon: '🛡️',
+    icon: '/icons/defense.png',
     color: '#81c784',
     label: 'Defense',
   },
   INITIATIVE: {
     key: 'INITIATIVE',
-    icon: '⚡',
+    icon: '/icons/initiative.png',
     color: '#81c784',
     label: 'Initiative',
   },
   RANGE: {
     key: 'RANGE',
-    icon: '🎯',
+    icon: '/icons/range.png',
     color: '#ffb74d',
     label: 'Range',
   },
   MOVEMENT: {
     key: 'MOVEMENT',
-    icon: '🏃',
+    icon: '/icons/movement.png',
     color: '#64b5f6',
     label: 'Movement',
   },
   RADIUS: {
     key: 'RADIUS',
-    icon: '🌐',
+    icon: '/icons/radius.png',
     color: '#ba68c8',
     label: 'Radius',
   },

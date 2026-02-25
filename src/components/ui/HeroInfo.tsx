@@ -33,7 +33,8 @@ export function HeroInfo({ hero, isYou }: Props) {
                 className={styles.item}
                 title={`${item.label}: +${hero.items[item.key] as number}`}
               >
-                +{hero.items[item.key] as number}{item.icon}
+                <img src={item.icon} alt={item.label} className={styles.itemIcon} />
+                +{hero.items[item.key] as number}
               </span>
             ))}
           </span>

@@ -24,6 +24,15 @@
 .item {
   font-weight: 500;
   white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.itemIcon {
+  width: 16px;
+  height: 16px;
+  display: inline-block;
 }
 
 .handColors {
