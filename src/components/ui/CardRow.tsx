@@ -1,7 +1,9 @@
 import { CARD_COLORS } from "../../utils/colors";
+import { getCardStatsDisplay } from "../../utils/cardStats";
 import type { CardView } from "../../types/game";
 import { Tooltip } from "./Tooltip";
 import { CardTooltipContent } from "./CardTooltipContent";
+import styles from "./CardRow.module.css";
 
 interface Props {
   card: CardView;
@@ -11,6 +13,8 @@ interface Props {
 
 export function CardRow({ card, isSelected, onClick }: Props) {
   const colorPip = CARD_COLORS[card.color ?? ""] || "#888";
+  const isSilver = card.color === "SILVER";
+  const stats = getCardStatsDisplay(card);
 
   const hasTooltip = card.effect_text || Object.keys(card.secondary_actions).length > 0 || card.is_ranged || card.radius_value;
 
@@ -41,15 +45,23 @@ export function CardRow({ card, isSelected, onClick }: Props) {
         }}
       />
       <span style={{ flex: 1, fontWeight: 500 }}>{card.name}</span>
-      {card.primary_action && (
-        <span style={{ color: "var(--text-secondary)", fontSize: 11 }}>
-          {card.primary_action[0]}
-          {card.primary_action_value != null && !["HOLD", "CLEAR", "FAST_TRAVEL"].includes(card.primary_action) ? `:${card.primary_action_value}` : ""}
-        </span>
-      )}
-      <span style={{ color: "var(--text-secondary)", fontSize: 11 }}>
-        I:{card.initiative}
-      </span>
+      <div className={styles.stats}>
+        {stats.map((stat) => (
+          <span
+            key={stat.key}
+            className={`${styles.stat} ${stat.isPrimary && isSilver ? styles.silverPrimary : ''}`}
+            style={stat.isPrimary ? {
+              borderColor: colorPip,
+            } : undefined}
+            title={`${stat.label}: ${stat.value ?? '0'}`}
+          >
+            <img src={stat.icon} alt={stat.label} className={styles.statIcon} />
+            {stat.value !== undefined && (
+              <span style={stat.isPrimary ? { color: colorPip } : undefined}>{stat.value}</span>
+            )}
+          </span>
+        ))}
+      </div>
     </div>
   );
 

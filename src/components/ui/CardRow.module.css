@@ -1,0 +1,29 @@
+.stats {
+  display: inline-flex;
+  gap: 2px;
+}
+
+.stat {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 2px 4px;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.03);
+  font-size: 11px;
+}
+
+.statIcon {
+  width: 12px;
+  height: 12px;
+  display: inline-block;
+}
+
+.silverPrimary {
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.5);
+}
+
+.silverPrimary span:last-child {
+  text-shadow: 0 0 2px rgba(0, 0, 0, 0.8);
+}
