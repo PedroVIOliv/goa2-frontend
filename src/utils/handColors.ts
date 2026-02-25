@@ -1,5 +1,5 @@
 import { CARD_COLORS } from "./colors";
-import type { HeroView } from "../types/game";
+import type { HeroView, CardView } from "../types/game";
 
 const BASE_HAND_COLORS = ['SILVER', 'GOLD', 'RED', 'BLUE', 'GREEN'];
 
@@ -7,11 +7,11 @@ export function getHandColors(hero: HeroView): string[] {
   const usedColors = new Set<string>();
   
   hero.discard_pile
-    .filter(card => card.color)
+    .filter((card): card is CardView & { color: string } => card.color !== null)
     .forEach(card => usedColors.add(card.color!));
   
   hero.played_cards
-    .filter(card => card.color)
+    .filter((card): card is CardView & { color: string } => card !== null && card.color !== null)
     .forEach(card => usedColors.add(card.color!));
   
   if (hero.current_turn_card?.color) {
