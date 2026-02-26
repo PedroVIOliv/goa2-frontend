@@ -1,5 +1,7 @@
+import { useState, useEffect } from "react";
 import { CARD_COLORS } from "../../utils/colors";
 import { getCardStatsDisplay } from "../../utils/cardStats";
+import { colorizeIcon } from "../../utils/iconColorizer";
 import type { CardView } from "../../types/game";
 import { Tooltip } from "./Tooltip";
 import { CardTooltipContent } from "./CardTooltipContent";
@@ -15,6 +17,19 @@ export function CardRow({ card, isSelected, onClick }: Props) {
   const colorPip = CARD_COLORS[card.color ?? ""] || "#888";
   const isSilver = card.color === "SILVER";
   const stats = getCardStatsDisplay(card);
+  const [coloredIcons, setColoredIcons] = useState<Record<string, string>>({});
+
+  useEffect(() => {
+    const primaryStat = stats.find((s) => s.isPrimary);
+    if (primaryStat && !isSilver) {
+      colorizeIcon(primaryStat.icon, colorPip).then((coloredUrl) => {
+        setColoredIcons((prev) => prev[primaryStat.key] !== coloredUrl 
+          ? { [primaryStat.key]: coloredUrl }
+          : prev
+        );
+      });
+    }
+  }, [card.color, stats, colorPip, isSilver]);
 
   const hasTooltip = card.effect_text || Object.keys(card.secondary_actions).length > 0 || card.is_ranged || card.radius_value;
 
@@ -55,7 +70,7 @@ export function CardRow({ card, isSelected, onClick }: Props) {
             } : undefined}
             title={`${stat.label}: ${stat.value ?? '0'}`}
           >
-            <img src={stat.icon} alt={stat.label} className={styles.statIcon} />
+            <img src={stat.isPrimary && !isSilver ? (coloredIcons[stat.key] || stat.icon) : stat.icon} alt={stat.label} className={styles.statIcon} />
             {stat.value !== undefined && (
               <span style={stat.isPrimary ? { color: colorPip } : undefined}>{stat.value}</span>
             )}
