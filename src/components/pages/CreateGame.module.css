@@ -3,32 +3,192 @@
   align-items: center;
   justify-content: center;
   height: 100vh;
+  overflow: hidden;
 }
 
-.form {
+.container {
   background: var(--bg-secondary);
   border: 1px solid var(--border);
   border-radius: 8px;
-  padding: 32px;
-  width: 400px;
+  padding: 24px;
+  width: 1200px;
+  height: 90vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  flex-shrink: 0;
 }
 
 .title {
-  font-size: 24px;
+  font-size: 28px;
   font-weight: bold;
-  margin-bottom: 24px;
   text-align: center;
-}
-
-.field {
   margin-bottom: 16px;
 }
 
-.label {
-  display: block;
+.gameSetup {
+  flex: 1;
+  display: flex;
+  gap: 16px;
+  overflow: hidden;
+}
+
+.teamSection {
+  flex: 0 0 280px;
+  display: flex;
+  flex-direction: column;
+}
+
+.teamBox {
+  flex: 1;
+  background: var(--bg-primary);
+  border: 2px dashed var(--border);
+  border-radius: 8px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+
+.teamBox:hover {
+  border-color: var(--text-secondary);
+}
+
+.teamBox.dragOver {
+  border-color: #4caf50;
+}
+
+.teamHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.teamTitle {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.teamTitle.red {
+  color: #e53935;
+}
+
+.teamTitle.blue {
+  color: #1e88e5;
+}
+
+.teamCount {
   font-size: 13px;
   color: var(--text-secondary);
-  margin-bottom: 4px;
+}
+
+.heroList {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.heroPool {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.poolHeader {
+  font-size: 18px;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 12px;
+  color: var(--text-primary);
+}
+
+.heroGrid {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 4px;
+}
+
+.heroCard {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 12px 16px;
+  cursor: grab;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all 0.2s;
+  user-select: none;
+}
+
+.heroCard:hover {
+  background: var(--bg-primary);
+  border-color: var(--text-secondary);
+  transform: translateY(-1px);
+}
+
+.heroCard:active {
+  cursor: grabbing;
+}
+
+.heroName {
+  font-size: 14px;
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.removeButton {
+  background: transparent;
+  border: none;
+  color: #f44336;
+  font-size: 20px;
+  line-height: 1;
+  padding: 0 4px;
+  cursor: pointer;
+  border-radius: 4px;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+
+.removeButton:hover {
+  background: rgba(244, 67, 54, 0.1);
+}
+
+.emptySlot {
+  color: var(--text-secondary);
+  font-size: 13px;
+  text-align: center;
+  padding: 24px 8px;
+  border: 1px dashed var(--border);
+  border-radius: 4px;
+}
+
+.controls {
+  flex-shrink: 0;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+
+.field {
+  margin-bottom: 12px;
 }
 
 .checkboxLabel {
@@ -38,6 +198,7 @@
   color: var(--text-primary);
   cursor: pointer;
   user-select: none;
+  justify-content: center;
 }
 
 .checkboxLabel input[type="checkbox"] {
@@ -47,16 +208,6 @@
 
 .checkboxLabel span {
   user-select: none;
-}
-
-.select, .input {
-  width: 100%;
-  padding: 8px 12px;
-  background: var(--bg-primary);
-  color: var(--text-primary);
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  font-size: 14px;
 }
 
 .submit {
@@ -79,16 +230,21 @@
   color: #f44336;
   font-size: 13px;
   margin-top: 8px;
+  text-align: center;
 }
 
 .result {
-  margin-top: 24px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .resultTitle {
-  font-size: 16px;
+  font-size: 18px;
   font-weight: bold;
-  margin-bottom: 12px;
+  margin-bottom: 16px;
 }
 
 .link {
