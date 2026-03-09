@@ -33,7 +33,7 @@ const getTierClass = (tier: string) => {
 
 export function CardTooltipContent({ card }: { card: CardView }) {
   return (
-    <div className={styles.goaTooltip}>
+    <div className={`${styles.goaTooltip} ${card.is_active ? styles.goaTooltipActive : ''}`}>
       <div className={styles.goaTooltipHeader}>
         <span className={styles.goaTooltipTitle}>{card.name}</span>
         {card.tier && (
