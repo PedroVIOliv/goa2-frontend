@@ -35,7 +35,14 @@ export function useGameSocket(gameId: string, token: string) {
   useEffect(() => {
     if (!gameId || !token) return;
 
-    const wsUrl = `ws://localhost:8000/games/${gameId}/ws?token=${token}`;
+    const apiBase = import.meta.env.VITE_API_URL || "";
+    let wsBase: string;
+    if (apiBase) {
+      wsBase = apiBase.replace(/^http/, "ws");
+    } else {
+      wsBase = "ws://localhost:8000";
+    }
+    const wsUrl = `${wsBase}/games/${gameId}/ws?token=${token}`;
 
     const handleMessage = (data: unknown) => {
       const msg = data as ServerMessage;

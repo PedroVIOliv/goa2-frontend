@@ -1,6 +1,6 @@
 import type { CreateGameResponse } from "../types/game";
 
-const API_BASE = "";  // Uses Vite proxy
+const API_BASE = import.meta.env.VITE_API_URL || "";
 
 export async function fetchHeroes(): Promise<string[]> {
   const res = await fetch(`${API_BASE}/heroes`);
