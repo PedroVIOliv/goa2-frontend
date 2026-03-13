@@ -38,7 +38,7 @@ export function useGameSocket(gameId: string, token: string) {
     const apiBase = import.meta.env.VITE_API_URL || "";
     let wsBase: string;
     if (apiBase) {
-      wsBase = apiBase.replace(/^http/, "ws");
+      wsBase = apiBase.replace(/^https?:\/\//, "wss://");
     } else {
       wsBase = "ws://localhost:8000";
     }
